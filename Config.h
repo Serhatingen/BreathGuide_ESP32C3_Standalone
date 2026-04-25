@@ -3,14 +3,20 @@
 #include <Arduino.h>
 
 // -------------------------
+// Target board: ESP32-S3 N16R8
+// (16 MB Flash / 8 MB OPI PSRAM)
+//
 // Pin definitions
 // Adjust to match your board's silk-screen if needed.
+//
+// ⚠  GPIO 35, 36, 37 are reserved for the OPI PSRAM bus on N16R8.
+//    Never route signals to those pads.
 // -------------------------
-static const uint8_t PIN_LED_DATA   = 7;   // WS2812 data
-static const uint8_t PIN_BUTTON     = 4;   // single button, INPUT_PULLUP
-static const uint8_t PIN_BUZZER     = 3;   // passive piezo / buzzer
-static const uint8_t PIN_OLED_SDA   = 5;   // I2C SDA
-static const uint8_t PIN_OLED_SCL   = 6;   // I2C SCL
+static const uint8_t PIN_LED_DATA   = 38;  // WS2812 data  (any free GPIO)
+static const uint8_t PIN_BUTTON     = 0;   // single button, INPUT_PULLUP (BOOT key)
+static const uint8_t PIN_BUZZER     = 17;  // passive piezo / buzzer
+static const uint8_t PIN_OLED_SDA   = 8;   // I2C SDA
+static const uint8_t PIN_OLED_SCL   = 9;   // I2C SCL
 
 // -------------------------
 // Hardware constants

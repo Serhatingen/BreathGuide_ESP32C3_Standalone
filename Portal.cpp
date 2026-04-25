@@ -71,7 +71,7 @@ button{
 <body>
 <div class="wrap">
   <div class="card">
-    <div class="badge">ESP32-C3 BreathGuide</div>
+    <div class="badge">ESP32-S3 BreathGuide</div>
     <h1>Nefes Cihazı Ayarları</h1>
     <p>Buradan seans temposunu ve cihaz davranışını ayarlayabilirsin.
        Kaydet dedikten sonra ayarlar cihazın içinde saklanır.</p>
