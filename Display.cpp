@@ -25,7 +25,7 @@ void drawCenteredText(const String &line1, const String &line2, uint8_t size1, u
 }
 
 void drawBootScreen() {
-  drawCenteredText("BreathGuide", "ESP32-C3", 1, 1);
+  drawCenteredText("BreathGuide", "ESP32-S3", 1, 1);
 }
 
 void drawIdleScreen() {
