@@ -11,7 +11,13 @@ void drawCenteredText(const String &line1,
 void drawBootScreen();
 void drawIdleScreen();
 void drawPortalInfoScreen();
-void drawWaitingEyesFrame();   // rate-limited to ~22 fps; safe to call every loop
+
+// Call once after display.begin() to create the animated-eye Face object.
+void initEyeFace();
+
+// Renders one frame of the animated-eye idle screen.  Safe to call every loop.
+void drawWaitingEyesFrame();
+
 void drawSessionScreen(const char* phaseLabel,
                        uint8_t     secondsLeft,
                        uint8_t     roundIndex,

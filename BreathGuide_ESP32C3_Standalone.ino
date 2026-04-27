@@ -54,8 +54,11 @@ void setup() {
 
   loadSettings();
 
-  FastLED.addLeds<WS2812, PIN_LED_DATA, GRB>(leds, NUM_LEDS);
-  FastLED.setBrightness(settings.brightness);
+  // Initialise the animated-eye face (must be after display.begin())
+  initEyeFace();
+
+  strip.begin();
+  strip.setBrightness(settings.brightness);
   clearLeds();
 
   // ESP32-Arduino v3 API: ledcAttach(pin, freq, resolution)
@@ -85,6 +88,7 @@ void loop() {
     case MODE_IDLE:
       renderIdleLeds();
       handleReminderScheduler();
+      drawWaitingEyesFrame();
       break;
 
     case MODE_WAIT_ACK:

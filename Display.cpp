@@ -1,5 +1,9 @@
 #include "Display.h"
 #include "AppState.h"
+#include "Face.h"
+
+// Animated-eye face object (created in initEyeFace)
+static Face *eyeFace = nullptr;
 
 void drawCenteredText(const String &line1, const String &line2, uint8_t size1, uint8_t size2) {
   display.clearDisplay();
@@ -27,7 +31,6 @@ void drawCenteredText(const String &line1, const String &line2, uint8_t size1, u
 void drawBootScreen() {
   drawCenteredText("BreathGuide", "ESP32-S3", 1, 1);
 }
-
 void drawIdleScreen() {
   display.clearDisplay();
   display.setTextColor(SSD1306_WHITE);
@@ -68,56 +71,27 @@ void drawPortalInfoScreen() {
   display.display();
 }
 
+void initEyeFace() {
+  if (eyeFace) return;   // already initialised
+
+  // Face(screenW, screenH, eyeSize):
+  //   screenW=128, screenH=64 → CenterX=64, CenterY=32
+  //   eyeSize=36  → left-eye X = 64-18-4 = 42, right-eye X = 64+18+4 = 86
+  eyeFace = new Face(128, 64, 36);
+  eyeFace->Expression.GoTo_Normal();
+
+  eyeFace->RandomBehavior = true;
+  eyeFace->RandomBlink    = true;
+  eyeFace->RandomLook     = true;
+
+  eyeFace->Blink.Timer.SetIntervalMillis(3200);
+  eyeFace->Behavior.Timer.SetIntervalMillis(4000);
+  eyeFace->Look.Timer.SetIntervalMillis(2500);
+}
+
 void drawWaitingEyesFrame() {
-  static unsigned long lastFrameMs = 0;
-  unsigned long now = millis();
-  if (now - lastFrameMs < 45) return;
-  lastFrameMs = now;
-
-  const uint16_t cycleMs = 4200;
-  uint16_t t = (uint16_t)((now - waitAckStartedAt) % cycleMs);
-  int openness = 12;
-
-  if      (t < 80)                    openness = map(t, 0,    80,   12, 2);
-  else if (t < 160)                   openness = map(t, 80,   160,  2, 12);
-  else if (t > 2800 && t < 2880)      openness = map(t, 2800, 2880, 12, 3);
-  else if (t >= 2880 && t < 2960)     openness = map(t, 2880, 2960, 3, 12);
-
-  float a      = (now - waitAckStartedAt) * 0.0042f;
-  int   pupilX = (int)(sinf(a) * 4.5f);
-  int   pupilY = (int)(cosf(a * 1.23f) * 2.6f);
-
-  const int leftX  = 18;
-  const int rightX = 74;
-  const int eyeY   = 10;
-  const int eyeW   = 36;
-
-  display.clearDisplay();
-  display.setTextColor(SSD1306_WHITE);
-  display.setTextSize(1);
-  display.setCursor(18, 0);
-  display.print("Butona bas :)");
-
-  // Eye whites
-  display.fillRoundRect(leftX,  eyeY, eyeW, openness, 8, SSD1306_WHITE);
-  display.fillRoundRect(rightX, eyeY, eyeW, openness, 8, SSD1306_WHITE);
-
-  if (openness > 5) {
-    int cy = eyeY + openness / 2;
-    // Pupils
-    display.fillCircle(leftX  + eyeW / 2 + pupilX, cy + pupilY, 4, SSD1306_BLACK);
-    display.fillCircle(rightX + eyeW / 2 + pupilX, cy + pupilY, 4, SSD1306_BLACK);
-    // Highlights
-    display.drawPixel(leftX  + eyeW / 2 + pupilX - 1, cy + pupilY - 1, SSD1306_WHITE);
-    display.drawPixel(rightX + eyeW / 2 + pupilX - 1, cy + pupilY - 1, SSD1306_WHITE);
-  }
-
-  // Eyebrows
-  int browLift = (int)(sinf(a * 0.8f) * 2.0f);
-  display.drawLine(leftX  +  6, eyeY - 2 - browLift, leftX  + 26, eyeY - 5 + browLift, SSD1306_WHITE);
-  display.drawLine(rightX + 10, eyeY - 5 + browLift, rightX + 30, eyeY - 2 - browLift, SSD1306_WHITE);
-
-  display.display();
+  if (!eyeFace) return;
+  eyeFace->Update();
 }
 
 void drawSessionScreen(const char* phaseLabel, uint8_t secondsLeft,

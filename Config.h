@@ -21,10 +21,10 @@ static const uint8_t PIN_OLED_SCL   = 9;   // I2C SCL
 // -------------------------
 // Hardware constants
 // -------------------------
-static const uint8_t  NUM_LEDS      = 10;
+static const uint8_t  NUM_LEDS      = 26;
 static const uint8_t  OLED_ADDR     = 0x3C;
 static const uint16_t SCREEN_WIDTH  = 128;
-static const uint16_t SCREEN_HEIGHT = 32;
+static const uint16_t SCREEN_HEIGHT = 64;
 
 // -------------------------
 // Button timing

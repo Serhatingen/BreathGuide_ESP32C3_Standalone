@@ -241,7 +241,7 @@ static void handlePostSettings() {
   settings.reminderEnabled = server.hasArg("reminderEnabled")
     ? server.arg("reminderEnabled") == "1" : false;
 
-  FastLED.setBrightness(settings.brightness);
+  strip.setBrightness(settings.brightness);
   saveSettings();
   scheduleNextReminder();
   server.send(200, "text/plain; charset=utf-8", "Ayarlar kaydedildi.");
